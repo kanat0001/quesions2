@@ -3,6 +3,7 @@ import questionsRaw from "./data/questions.json";
 import react from './data/react.json'
 import scrin from './data/scrin.json'
 import nextJs from './data/nextJs.json'
+import node from './data/node.json'
 import type { LearnStatus, ProgressMap, QuestionItem } from "./types";
 import { loadProgress, resetProgress, setStatus } from "./storage";
 import { makeTopics, normalize, shuffle, STATUS_LABEL } from "./utils";
@@ -40,6 +41,7 @@ export default function App() {
   ...react,
   ...scrin,
   ...nextJs,
+  ...node,
 ] as QuestionItem[];
 
   const [progress, setProgress] = useState<ProgressMap>({});
