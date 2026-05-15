@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import questionsRaw from "./data/questions.json";
+import react from './data/react.json'
+import scrin from './data/scrin.json'
+import nextJs from './data/nextJs.json'
 import type { LearnStatus, ProgressMap, QuestionItem } from "./types";
 import { loadProgress, resetProgress, setStatus } from "./storage";
 import { makeTopics, normalize, shuffle, STATUS_LABEL } from "./utils";
@@ -8,6 +11,7 @@ type Mode = "list" | "train";
 const ALL_TOPICS_ID = "__all__";
 const THEME_KEY = "qa-trainer-theme-v1";
 type Theme = "light" | "dark";
+
 
 function getStatus(progress: ProgressMap, id: string): LearnStatus {
   return progress[id] ?? "unlearned";
@@ -31,7 +35,12 @@ function getInitialTheme(): Theme {
 }
 
 export default function App() {
-  const questions = questionsRaw as QuestionItem[];
+  const questions = [
+  ...questionsRaw,
+  ...react,
+  ...scrin,
+  ...nextJs,
+] as QuestionItem[];
 
   const [progress, setProgress] = useState<ProgressMap>({});
   const [selectedTopicId, setSelectedTopicId] = useState<string>(ALL_TOPICS_ID);
@@ -151,44 +160,51 @@ export default function App() {
     }
 
     return filteredQuestions.map((q) => {
-      const st = getStatus(progress, q.id);
-      const isOpen = !!openAnswer[q.id];
+  const key = `${q.topicId}-${q.id}`;
 
-      return (
-        <div className="card" key={q.id}>
-          <div className="cardTop">
-            <div className="cardTopLeft">
-              <p className="qTitle">{q.question}</p>
-              <div className="muted small">
-                {q.topicTitle} • {statusBadge(st)}
-                {q.tags?.length ? <> • tags: {q.tags.join(", ")}</> : null}
-              </div>
-            </div>
+  const st = getStatus(progress, q.id);
+  const isOpen = !!openAnswer[key];
 
-            <button
-              className="button"
-              onClick={() => setOpenAnswer((prev) => ({ ...prev, [q.id]: !prev[q.id] }))}
-            >
-              {isOpen ? "Скрыть" : "Ответ"}
-            </button>
-          </div>
-
-          {isOpen && <div className="answer">{q.answer}</div>}
-
-          <div className="actions">
-            <button className="button" onClick={() => setQuestionStatus(q.id, "unlearned")}>
-              Не выучено
-            </button>
-            <button className="button" onClick={() => setQuestionStatus(q.id, "learning")}>
-              В процессе
-            </button>
-            <button className="button" onClick={() => setQuestionStatus(q.id, "learned")}>
-              Выучено
-            </button>
+  return (
+    <div className="card" key={key}>
+      <div className="cardTop">
+        <div className="cardTopLeft">
+          <p className="qTitle">{q.question}</p>
+          <div className="muted small">
+            {q.topicTitle} • {statusBadge(st)}
+            {q.tags?.length ? <> • tags: {q.tags.join(", ")}</> : null}
           </div>
         </div>
-      );
-    });
+
+        <button
+          className="button"
+          onClick={() =>
+            setOpenAnswer((prev) => ({
+              ...prev,
+              [key]: !prev[key],
+            }))
+          }
+        >
+          {isOpen ? "Скрыть" : "Ответ"}
+        </button>
+      </div>
+
+      {isOpen && <div className="answer">{q.answer}</div>}
+
+      <div className="actions">
+        <button className="button" onClick={() => setQuestionStatus(q.id, "unlearned")}>
+          Не выучено
+        </button>
+        <button className="button" onClick={() => setQuestionStatus(q.id, "learning")}>
+          В процессе
+        </button>
+        <button className="button" onClick={() => setQuestionStatus(q.id, "learned")}>
+          Выучено
+        </button>
+      </div>
+    </div>
+  );
+});
   };
 
   const renderTraining = () => {
