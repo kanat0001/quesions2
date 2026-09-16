@@ -1,9 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import questionsRaw from "./data/questions.json";
-import react from './data/react.json'
-import scrin from './data/scrin.json'
-import nextJs from './data/nextJs.json'
-import node from './data/node.json'
+import pythonBase from './data/pythonBase.json'
+import mutation from './data/mutation.json'
 import typeScript from './data/typeScript.json'
 import type { LearnStatus, ProgressMap, QuestionItem } from "./types";
 import { loadProgress, resetProgress, setStatus } from "./storage";
@@ -38,11 +35,8 @@ function getInitialTheme(): Theme {
 
 export default function App() {
   const questions = [
-  ...questionsRaw,
-  ...react,
-  ...scrin,
-  ...nextJs,
-  ...node,
+  ...pythonBase,
+  ...mutation,
   ...typeScript,
 ] as QuestionItem[];
 
