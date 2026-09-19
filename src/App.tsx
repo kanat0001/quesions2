@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import pythonBase from './data/pythonBase.json'
-import mutation from './data/mutation.json'
-import typeScript from './data/typeScript.json'
+import Python from './data/Python.json'
+
 import type { LearnStatus, ProgressMap, QuestionItem } from "./types";
 import { loadProgress, resetProgress, setStatus } from "./storage";
 import { makeTopics, normalize, shuffle, STATUS_LABEL } from "./utils";
@@ -35,9 +34,7 @@ function getInitialTheme(): Theme {
 
 export default function App() {
   const questions = [
-  ...pythonBase,
-  ...mutation,
-  ...typeScript,
+  ...Python,
 ] as QuestionItem[];
 
   const [progress, setProgress] = useState<ProgressMap>({});
